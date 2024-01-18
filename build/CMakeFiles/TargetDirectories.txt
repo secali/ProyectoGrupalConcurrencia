@@ -1,0 +1,3 @@
+C:/Workspaces/concurrencia/build/CMakeFiles/parallel.dir
+C:/Workspaces/concurrencia/build/CMakeFiles/edit_cache.dir
+C:/Workspaces/concurrencia/build/CMakeFiles/rebuild_cache.dir
