@@ -1,65 +1,62 @@
-#include <atomic>     // variable atómicas
-#include <chrono>     // utilidades de fechas y hora
-#include <filesystem> // sistema de ficheros
-#include <future>     // incluye objetos futuros y std::async
-#include <map>        // contenedor asociativo de clave ordenada única
+#include <atomic>
+#include <chrono>
+#include <filesystem>
+#include <future>
+#include <map>
 #include <ranges>
 #include <string>
-#include <thread> // hilos
-#include <vector> // contenedor secuencial de elementos contiguos
+#include <thread>
+#include <vector>
 
 #include "pel_print.hpp"
 
-namespace rn = std::ranges;     // alias
-namespace fs = std::filesystem; // alias
+namespace rn = std::ranges;
+namespace fs = std::filesystem;
 
 struct Extension_info
-{                            // información global acerca de una extensión determinada (.exe, .txt, etc)
-   std::uintmax_t num_files, // número total de archivos con una extensión determinada
-       total_size;           // tamaño total de bytes acumulado por dicha extensión
+{
+   std::uintmax_t num_files,
+       total_size;
 };
 
 auto main() -> int
 {
-   // solicitamos al usuario que indique una ruta, que almacenamos en un string:
+   // Solicitar al usuario que ingrese una ruta y almacenarla en un string
    pel::print("Please insert a root: ");
    auto root_str = std::string{};
    std::getline(std::cin, root_str);
 
-   // inicializamos un objeto std::filesystem::path con dicha ruta:
+   // Inicializar un objeto std::filesystem::path con la ruta proporcionada
    auto const root = fs::path{root_str};
-   // comprobamos que se trate de un directorio:
+   // Verificar que se trate de un directorio
    if (!fs::is_directory(root))
    {
       pel::print("you must indicate an actual directory");
       return 0;
    }
 
-   // empezamos a cronometrar la ejecución del programa:
+   // Iniciar el cronómetro para medir el tiempo de ejecución
    using clock = std::chrono::steady_clock;
    auto const start = clock::now();
 
-   // generamos un vector con todas las rutas (ya sean subdirectorios o ficheros)
-   // contenidas en root:
+   // Generar un vector con todas las rutas (subdirectorios o archivos) contenidas en root
    auto paths = std::vector<fs::path>{};
    for (fs::path pth : fs::recursive_directory_iterator{root})
    {
       paths.push_back(pth);
    }
 
-   // mapa global que asocia a cada extensión el número total de archivos y el tamaño
-   // total acumulado por ellos:
-   using map_type = std::map<std::string, Extension_info>; // alias
-   auto processed_data = map_type{};                       // inicializamos el mapa inicialmente vacío
+   // Definir un mapa global que asocia a cada extensión el número total de archivos y el tamaño total acumulado
+   using map_type = std::map<std::string, Extension_info>;
+   auto processed_data = map_type{}; // Inicializar el mapa inicialmente vacío
 
-   // contador atómico de subdirectorios dentro de la ruta raíz:
+   // Contador atómico de subdirectorios dentro de la ruta raíz
    auto directory_counter = std::atomic<std::uintmax_t>{0};
 
-   // tarea para un hilo: generación de un mapa parcial a partir de un bloque
-   //                     (chunk) del vector de rutas paths
+   // Tarea para un hilo: generación de un mapa parcial a partir de un bloque (chunk) del vector de rutas paths
    auto generate_map = [&](auto chunk) -> map_type
    {
-      auto res = map_type{}; // mapa parcial inicialmente vacío
+      auto res = map_type{}; // Mapa parcial inicialmente vacío
       for (fs::path const &pth : chunk)
       {
          // para cada ruta pth en el bloque chunk, emplearemos las funciones
@@ -83,65 +80,52 @@ auto main() -> int
             directory_counter.fetch_add(1, std::memory_order_relaxed); // Incrementa de manera atómica el contador
          }                                                             // end by FEC
       }
+
       return res;
    };
 
-   // número de hilos de hardware:
+   // Número de hilos de hardware
    auto const hardw_threads = std::thread::hardware_concurrency();
-   // número de hilos a lanzar:
+   // Número de hilos a lanzar
    auto const num_futures = hardw_threads - 1;
-   // tamaño máximo de un bloque/chunk del vector de rutas:
+   // Tamaño máximo de un bloque/chunk del vector de rutas
    auto const max_chunk_sz = paths.size() / hardw_threads;
 
-   // vector de objetos std::future inicialmente vacío:
+   // Vector de objetos std::future inicialmente vacío
    auto futures = std::vector<std::future<map_type>>{};
 
-   // dividimos el vector y lanzamos num_futures hilos adicionales para analizar
-   // los bloques. Nuestro propósito es ejecutar generate_map asíncronamente en
-   // ellos; mientras se ejecutan en paralelo los hilos lanzados, main se encargará de
-   // analizar el trozo remanente del vector de rutas también con generate_map:
-
-   // [[BLOQUE DE CÓDIGO 2 A IMPLEMENTAR POR EL EQUIPO DE TRABAJO]]
-
-   // --------------------------------------------------------------------------
-
-   // función lambda para fusionar un mapa parcial generado con generate_map
-   // dentro del mapa principal processed_data:
-   auto process_map = [&](map_type const &partial_map) -> void
+   // Dividir el vector y lanzar num_futures hilos adicionales para analizar los bloques
+   // Propósito: ejecutar generate_map asíncronamente en ellos; mientras se ejecutan en paralelo los hilos lanzados,
+   // main se encargará de analizar el trozo remanente del vector de rutas también con generate_map
+   for (std::size_t i = 0; i < num_futures; ++i)
    {
-      // Bloque 3: Fusión de mapas parciales
-      for (auto const &[ext, info] : partial_map)
-      {
-         processed_data[ext].num_files += info.num_files;
-         processed_data[ext].total_size += info.total_size;
-      }
-   };
-
-   // empleando la función process_map, fusionamos el mapa generado por main y
-   // los obtenidos a través de cada objeto futuro dentro de processed_date:
-
-   // [[BLOQUE DE CÓDIGO 4 A IMPLEMENTAR POR EL EQUIPO DE TRABAJO]]
-   for (auto &fut : futures)
-   {
-      // Obtener el mapa parcial generado por el hilo
-      map_type partial_map = fut.get();
-
-      // Iterar sobre el mapa parcial y fusionar con el mapa principal
-      for (const auto &[ext, info] : partial_map)
-      {
-         processed_data[ext].num_files += info.num_files;
-         processed_data[ext].total_size += info.total_size;
-      }
+      auto chunk_begin = paths.begin() + i * max_chunk_sz;
+      auto chunk_end = (i == num_futures - 1) ? paths.end() : chunk_begin + max_chunk_sz;
+      futures.push_back(std::async(std::launch::async, generate_map, std::vector<fs::path>{chunk_begin, chunk_end}));
    }
-   // --------------------------------------------------------------------------
+   
+// [[BLOQUE DE CÓDIGO 4 A IMPLEMENTAR POR EL EQUIPO DE TRABAJO]]
+   // Función lambda para fusionar un mapa parcial generado con generate_map
+   // dentro del mapa principal processed_data
+for (auto& fut : futures) {
+    // Obtener el mapa parcial generado por el hilo
+    map_type partial_map = fut.get();
+    
+    // Iterar sobre el mapa parcial y fusionar con el mapa principal
+    for (const auto& [ext, info] : partial_map) {
+        processed_data[ext].num_files += info.num_files;
+        processed_data[ext].total_size += info.total_size;
+    }
+}
 
-   // variables para acumular la información total del directorio root:
-   auto root_file = std::uintmax_t{0}; // número total de archivos dentro de la ruta raíz
-   auto root_size = std::uintmax_t{0}; // tamaño total en bytes de los archivos
+   // Variables para acumular la información total del directorio root
+   auto root_file = std::uintmax_t{0}; // Número total de archivos dentro de la ruta raíz
+   auto root_size = std::uintmax_t{0}; // Tamaño total en bytes de los archivos
 
-   // imprimimos la información relevante para cada extensión (tipo de extensión,
+   // Imprimir la información relevante para cada extensión (tipo de extensión,
    // número de archivos y tamaño acumulado por ellos), actualizando root_file y
-   // root_size:
+   // root_size
+   // [[BLOQUE DE CÓDIGO 5 A IMPLEMENTAR POR EL EQUIPO DE TRABAJO]]
    for (const auto &[ext, info] : processed_data)
    {
       // Imprimir información para cada extensión
@@ -151,10 +135,11 @@ auto main() -> int
       root_file += info.num_files;
       root_size += info.total_size;
    }
-
-   // imprimimos la información total del directorio y el tiempo de ejecución:
+   // Imprimir la información total del directorio y el tiempo de ejecución
    auto const stop = clock::now();
-   auto const duration = duration_cast<std::chrono::milliseconds>(stop - start);
+   auto const duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
    pel::println("\n{:>15}: {:>8} files {:>16} bytes | {} folders [{} ms]",
                 "Total", root_file, root_size, directory_counter.load(), duration.count());
+
+   return 0;
 }

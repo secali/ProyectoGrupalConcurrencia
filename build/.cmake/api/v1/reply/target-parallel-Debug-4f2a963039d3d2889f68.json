@@ -65,10 +65,6 @@
 				{
 					"backtrace" : 2,
 					"fragment" : "-pedantic"
-				},
-				{
-					"backtrace" : 2,
-					"fragment" : "-Werror"
 				}
 			],
 			"language" : "CXX",

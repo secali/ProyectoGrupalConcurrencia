@@ -1,7 +1,7 @@
 [
 {
   "directory": "C:/Workspaces/ProyectoGrupalConcurrencia/build",
-  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -g -std=c++23 -Wall -Wextra -pedantic -Werror -o CMakeFiles\\parallel.dir\\main.cpp.obj -c C:\\Workspaces\\ProyectoGrupalConcurrencia\\main.cpp",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -g -std=c++23 -Wall -Wextra -pedantic -o CMakeFiles\\parallel.dir\\main.cpp.obj -c C:\\Workspaces\\ProyectoGrupalConcurrencia\\main.cpp",
   "file": "C:\\Workspaces\\ProyectoGrupalConcurrencia\\main.cpp",
   "output": "CMakeFiles\\parallel.dir\\main.cpp.obj"
 }
