@@ -49,8 +49,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "C:/Workspaces/concurrencia/build",
-		"source" : "C:/Workspaces/concurrencia"
+		"build" : "C:/Workspaces/ProyectoGrupalConcurrencia/build",
+		"source" : "C:/Workspaces/ProyectoGrupalConcurrencia"
 	},
 	"version" : 
 	{

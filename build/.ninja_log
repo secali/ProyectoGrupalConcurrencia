@@ -1,9 +1,11 @@
 # ninja log v5
-2	1534	7272995393598578	CMakeFiles/parallel.dir/main.cpp.obj	6acd44151d9f57fa
-1546	1692	7272995395141887	debug/parallel.exe	1c4822edd18d75f4
-12	2105	7273000347600844	CMakeFiles/parallel.dir/main.cpp.obj	6acd44151d9f57fa
-2105	2244	7273000348991992	debug/parallel.exe	1c4822edd18d75f4
-5	1115	7273004186448644	CMakeFiles/parallel.dir/main.cpp.obj	6acd44151d9f57fa
-1116	1201	7273004187268889	debug/parallel.exe	1c4822edd18d75f4
 5	2026	7273010858150988	CMakeFiles/parallel.dir/main.cpp.obj	6acd44151d9f57fa
 2026	2153	7273010859401124	debug/parallel.exe	1c4822edd18d75f4
+6	2774	7279590639359111	CMakeFiles/parallel.dir/main.cpp.obj	ca9b58551ca2e74b
+2775	3100	7279590642453051	debug/parallel.exe	1c4822edd18d75f4
+17	2703	7279592081894910	CMakeFiles/parallel.dir/main.cpp.obj	ca9b58551ca2e74b
+2704	2952	7279592084253493	debug/parallel.exe	1c4822edd18d75f4
+7	2692	7279596338936459	CMakeFiles/parallel.dir/main.cpp.obj	ca9b58551ca2e74b
+2693	2934	7279596341216629	debug/parallel.exe	1c4822edd18d75f4
+19	2713	7279598249520096	CMakeFiles/parallel.dir/main.cpp.obj	ca9b58551ca2e74b
+2725	2966	7279598251885597	debug/parallel.exe	1c4822edd18d75f4

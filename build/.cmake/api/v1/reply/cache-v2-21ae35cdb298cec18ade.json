@@ -55,7 +55,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "c:/Workspaces/concurrencia/build"
+			"value" : "c:/Workspaces/ProyectoGrupalConcurrencia/build"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -427,7 +427,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Workspaces/concurrencia/build/CMakeFiles/pkgRedirects"
+			"value" : "C:/Workspaces/ProyectoGrupalConcurrencia/build/CMakeFiles/pkgRedirects"
 		},
 		{
 			"name" : "CMAKE_GENERATOR",
@@ -499,7 +499,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "C:/Workspaces/concurrencia"
+			"value" : "C:/Workspaces/ProyectoGrupalConcurrencia"
 		},
 		{
 			"name" : "CMAKE_INSTALL_PREFIX",
@@ -1207,7 +1207,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Workspaces/concurrencia/build"
+			"value" : "C:/Workspaces/ProyectoGrupalConcurrencia/build"
 		},
 		{
 			"name" : "parallel_IS_TOP_LEVEL",
@@ -1231,7 +1231,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Workspaces/concurrencia"
+			"value" : "C:/Workspaces/ProyectoGrupalConcurrencia"
 		}
 	],
 	"kind" : "cache",
